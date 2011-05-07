@@ -24,16 +24,21 @@ except:
     print "Could not connect to Amarok."
     sys.exit(1)
 
-index = tracklist.GetCurrentTrack() # to remove track from playlist
+index = tracklist.GetCurrentTrack()  # to remove track from playlist
 md = player.GetMetadata()
-location = md['location'] # track's url (to send track to trash)
-player.Next()
-# handle dynamic playlists. Thanks go to Oleg K (ICQ: 367607160)
-new_index = tracklist.GetCurrentTrack()
-if new_index == index:
-    tracklist.DelTrack(index-1)
+location = md['location']  # track's url (to send track to trash)
+is_last_track = tracklist.GetLength() == 1
+if not is_last_track:
+    player.Next()
+    # handle dynamic playlists. Thanks go to Oleg K (ICQ: 367607160)
+    new_index = tracklist.GetCurrentTrack()
+    if new_index == index:
+        tracklist.DelTrack(index-1)
+    else:
+        tracklist.DelTrack(index)
 else:
-    tracklist.DelTrack(index)
+    player.Stop()
+    tracklist.DelTrack(0)
 
 cmd = ['kioclient', 'move', location, 'trash:/']
 print "Running %s"%' '.join(cmd)
