@@ -1,0 +1,23 @@
+Simple script that moves the currently playing track to trash. 
+
+Increase the quality of your music collection by assigning a global shortcut to this script. :)
+
+- right-click the "Application Laucher" (blue K, in the lower left corner)
+- select "Menu Editor"
+- click "New Item" and give it a name (like "delete current track")
+    - Command: "python $HOME/.kde/share/apps/amarok/scripts/deltrack/deltrack.py" (without quotes)
+    - untick "Enable launch feedback"
+- open the "Advanced" tab (ALT+A)
+- click the "Current shortcut key" button and assign the shortcut
+
+Have fun!
+
+Requirements:
+
+- python == 2.5
+- amarok >= 2.0
+- KDE >= 4
+
+Author: Felix Hummel <deltrack@felixhummel.de>
+
+Thanks to Camille Gallet <camillegallet@yahoo.fr> for the infoamarok script!
