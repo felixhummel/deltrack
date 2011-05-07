@@ -1,8 +1,10 @@
-Deltrack is a simple script that moves the currently playing track to trash. 
+Deltrack is a simple script that moves the currently playing track to trash.
 
 Increase the quality of your music collection by assigning a global shortcut to this script. :)
 
-= Installation =
+Installation
+============
+
 Copy `deltrack.py` to $HOME/bin
 
     mkdir -p $HOME/bin
@@ -17,7 +19,8 @@ and install the input actions:
 
 Have fun!
 
-= Alternative Installation with Launcher =
+Alternative Installation with Launcher
+======================================
 
 - right-click the "Application Laucher" (blue K, in the lower left corner)
 - select "Menu Editor"
@@ -27,7 +30,8 @@ Have fun!
 - open the "Advanced" tab (ALT+A)
 - click the "Current shortcut key" button and assign the shortcut
 
-= Requirements =
+Requirements
+============
 
 - python >= 2.5
 - amarok >= 2.0
@@ -35,7 +39,8 @@ Have fun!
 
 Author: Felix Hummel <deltrack@felixhummel.de>
 
-= Thanks =
+Thanks
+======
 
 - Camille Gallet <camillegallet@yahoo.fr> for the infoamarok script
 - Oleg K for the dynamic playlists fix
