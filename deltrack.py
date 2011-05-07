@@ -35,7 +35,9 @@ if new_index == index:
 else:
     tracklist.DelTrack(index)
 
-retcode = subprocess.call(['kioclient', 'move', location, 'trash:/'])
+cmd = ['kioclient', 'move', location, 'trash:/']
+print "Running %s"%' '.join(cmd)
+retcode = subprocess.call(cmd)
 
 pathname = urllib2.url2pathname(location)
 path = urllib2.urlparse.urlparse(pathname).path
