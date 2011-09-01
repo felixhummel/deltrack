@@ -54,8 +54,7 @@ for ext in exts: #Delete each basename+extension.
     cmdext = ['kioclient', 'move', loc, 'trash:/']
     print "Running %s"%' '.join(cmdext)
     retcodext = subprocess.call(cmdext)
-    pathnamext = urllib2.url2pathname(loc)
-    path = urllib2.urlparse.urlparse(pathnamext).path
+    path = urllib2.urlparse.urlparse(loc).path
     if retcodext == 0:    
         print 'Successfully trashed "%s"'%path
     else:
