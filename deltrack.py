@@ -8,7 +8,10 @@ import dbus
 import sys
 import subprocess
 import urllib2
+import os
 from pprint import pprint
+
+exts = [".tqd"] # Other extensions to delete with same base name.
 
 try:
     bus = dbus.SessionBus()
@@ -27,6 +30,12 @@ except:
 index = tracklist.GetCurrentTrack()  # to remove track from playlist
 md = player.GetMetadata()
 location = md['location']  # track's url (to send track to trash)
+
+baselist = os.path.splitext(location)
+basename = baselist[0]
+basext = baselist[1]
+exts.append(basext)
+
 is_last_track = tracklist.GetLength() == 1
 if not is_last_track:
     player.Next()
@@ -40,15 +49,16 @@ else:
     player.Stop()
     tracklist.DelTrack(0)
 
-cmd = ['kioclient', 'move', location, 'trash:/']
-print "Running %s"%' '.join(cmd)
-retcode = subprocess.call(cmd)
+for ext in exts: #Delete each basename+extension.
+    loc = ''.join([basename,ext])
+    cmdext = ['kioclient', 'move', loc, 'trash:/']
+    print "Running %s"%' '.join(cmdext)
+    retcodext = subprocess.call(cmdext)
+    pathnamext = urllib2.url2pathname(loc)
+    path = urllib2.urlparse.urlparse(pathnamext).path
+    if retcodext == 0:    
+        print 'Successfully trashed "%s"'%path
+    else:
+        print 'Could not trash"%s"'%path
 
-pathname = urllib2.url2pathname(location)
-path = urllib2.urlparse.urlparse(pathname).path
-if retcode == 0:
-    print 'Successfully trashed "%s"'%path
-    sys.exit(0)
-else:
-    print 'Could not trash "%s"'%path
-    sys.exit(1)
+sys.exit(0)
