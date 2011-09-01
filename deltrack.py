@@ -49,6 +49,7 @@ else:
     player.Stop()
     tracklist.DelTrack(0)
 
+path = ''
 for ext in exts: #Delete each basename+extension.
     loc = ''.join([basename,ext])
     cmdext = ['kioclient', 'move', loc, 'trash:/']
@@ -59,5 +60,12 @@ for ext in exts: #Delete each basename+extension.
         print 'Successfully trashed "%s"'%path
     else:
         print 'Could not trash"%s"'%path
+
+direc = os.path.split(path)[0] #If the dir is empty let's get rid of it, as well.
+try:
+    os.rmdir(direc)
+    print "Removed empty dir %s." % direc
+except OSError:
+    print "Did not remove containing dir %s, not empty/no perms." % direc
 
 sys.exit(0)
