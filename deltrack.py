@@ -83,15 +83,13 @@ for f in os.listdir(direc) :
 
 try: # If we made it this far, nuke the dir/subdir.
     if subdir :
-        for s in os.listdir(subdir) :
-            os.remove(os.path.join(subdir, s))
-        os.rmdir(subdir)
+        rmdir = ['kioclient', 'move', subdir, 'trash:/']
+        retcodext = subprocess.call(rmdir)
         print "Removed empty subdir %s." % subdir
-    for f in os.listdir(direc) :
-        os.remove(os.path.join(direc, f))
-    os.rmdir(direc)
+    rmdir = ['kioclient', 'move', direc, 'trash:/']
+    retcodext = subprocess.call(rmdir)
     print "Removed empty dir %s." % direc
 except OSError:
-    print "Did not remove containing dir %s, not empty/no perms." % direc
+    print "Error removing %s, maybe no perms." % direc
 
 sys.exit(0)
