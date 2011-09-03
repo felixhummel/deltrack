@@ -30,6 +30,13 @@ Alternative Installation with Launcher
 - open the "Advanced" tab (ALT+A)
 - click the "Current shortcut key" button and assign the shortcut
 
+Slightly Advanced Config
+========================
+
+- line 15 contains a list called "exts".  Add other file extentions here to be deleted along with the song itself.  For example, exts=[] will not utilize this feature at all, while exts[".tqd"] will, if songName.mp3 is our deleted file, also delete songName.tqd.
+- There is a similar list called "save".  This contains all extensions to recognize as "songs".  If a directory containing the song you just deleted contains NO files with the file extensions in save[], the entire directory will be deleted.
+  This prevents empty directories from being scattered about, and also handles the case where a useless cover art image or playlist is left behind.
+
 Requirements
 ============
 

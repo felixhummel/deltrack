@@ -8,7 +8,11 @@ import dbus
 import sys
 import subprocess
 import urllib2
+import os
 from pprint import pprint
+
+save = [".mp3",".flac",".wma",".ogg"] # Don't delete dir if it contains any of these files.
+exts = [".tqd"] # Other extensions to delete with same base name.
 
 try:
     bus = dbus.SessionBus()
@@ -27,6 +31,12 @@ except:
 index = tracklist.GetCurrentTrack()  # to remove track from playlist
 md = player.GetMetadata()
 location = md['location']  # track's url (to send track to trash)
+
+baselist = os.path.splitext(location)
+basename = baselist[0]
+basext = baselist[1]
+exts.append(basext)
+
 is_last_track = tracklist.GetLength() == 1
 if not is_last_track:
     player.Next()
@@ -40,15 +50,46 @@ else:
     player.Stop()
     tracklist.DelTrack(0)
 
-cmd = ['kioclient', 'move', location, 'trash:/']
-print "Running %s"%' '.join(cmd)
-retcode = subprocess.call(cmd)
+path = ''
+for ext in exts: #Delete each basename+extension.
+    loc = ''.join([basename,ext])
+    cmdext = ['kioclient', 'move', loc, 'trash:/']
+    print "Running %s"%' '.join(cmdext)
+    retcodext = subprocess.call(cmdext)
+    path = urllib2.urlparse.urlparse(loc).path
+    if retcodext == 0:    
+        print 'Successfully trashed "%s"'%path
+    else:
+        print 'Could not trash"%s"'%path
 
-pathname = urllib2.url2pathname(location)
-path = urllib2.urlparse.urlparse(pathname).path
-if retcode == 0:
-    print 'Successfully trashed "%s"'%path
-    sys.exit(0)
-else:
-    print 'Could not trash "%s"'%path
-    sys.exit(1)
+direc = os.path.split(path)[0] #If the dir is empty let's get rid of it, as well.
+subdir = '' # We'll set this below, if it exists.
+direc = direc.replace("%20",' ') # Replace KDE's sillyness.
+#The following for loops seem a bit ugly, but this seems quicker than using recursion and ending up many levels deep,
+#and the various exists are off-putting, but we want to exit asap if we can.
+for f in os.listdir(direc) :
+    if os.path.isdir(os.path.join(direc, f)) : # We'll go one level deep, no more, takes time.
+        subdir = os.path.join(direc, f)
+        subls = os.listdir(subdir)
+        if len(subls) > 15 : # We probably don't want to delete this.
+            sys.exit(0)
+        for s in subls :
+            if os.path.isdir(os.path.join(subdir, s)) : # Only one level deep, so stop here.
+                sys.exit(0)
+            if os.path.splitext(s)[1] in save :
+                sys.exit(0)
+    if os.path.splitext(f)[1] in save :
+        sys.exit(0)
+
+try: # If we made it this far, nuke the dir/subdir.
+    if subdir :
+        rmdir = ['kioclient', 'move', subdir, 'trash:/']
+        retcodext = subprocess.call(rmdir)
+        print "Removed empty subdir %s." % subdir
+    rmdir = ['kioclient', 'move', direc, 'trash:/']
+    retcodext = subprocess.call(rmdir)
+    print "Removed empty dir %s." % direc
+except OSError:
+    print "Error removing %s, maybe no perms." % direc
+
+sys.exit(0)
