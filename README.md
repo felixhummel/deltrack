@@ -8,7 +8,7 @@ Installation
 Copy `deltrack.py` to $HOME/bin
 
     mkdir -p $HOME/bin
-    wget -O $HOME/bin/deltrack.py https://raw.github.com/felixhummel/deltrack/master/deltrack.py
+    wget -O $HOME/bin/deltrack.py https://raw.githubusercontent.com/felixhummel/deltrack/master/deltrack.py
     chmod +x $HOME/bin/deltrack.py
 
 and install the input actions:
